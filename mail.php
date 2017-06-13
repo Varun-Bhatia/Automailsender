@@ -126,7 +126,7 @@ $loop_count = floor($receiver_count/$sender_count);
 			$mail->Username = $name;                 
 			$mail->Password = $password; 
 			$mail->From = $email;
-			$mail->FromName = 'mail';
+			$mail->FromName = $name;
 			$status= $receiver[$count]['status'];
 	    
 	
