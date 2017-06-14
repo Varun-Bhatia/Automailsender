@@ -168,8 +168,9 @@ $loop_count = floor($receiver_count/$sender_count);
 			
 			
 			
-			$mail->Subject = $sub;
 			$mail->Body = $msg;
+			$mail->Subject = $sub;
+			
 			$mail->AddAddress($to);
      		$res=$mail->send();
      		$mail->ClearAddresses(); 
