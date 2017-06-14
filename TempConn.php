@@ -14,6 +14,7 @@ if(isset($_POST["submit"]))
  $text= nl2br($text);
  print_r($text);
  $text=str_replace("'","\'",$text);
+ $text=str_replace('"','\"',$text);
  $sql = mysqli_query($link,"INSERT INTO Email (emailbody) VALUES ('$text')");
  
  if($sql){
