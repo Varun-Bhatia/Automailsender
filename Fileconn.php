@@ -45,7 +45,7 @@ if(isset($_POST["submit"]))
 if(mysqli_num_rows(mysqli_query($link, "SHOW TABLES LIKE '".$tableName."'"))>=1)
 {
 	mysqli_query($link, "DELETE FROM CampaignTrack where name="."'".$tableName."'");
-	mysqli_query($link, 'DROP TABLE IF EXISTS `'.$tableName.'`') or die(mysql_error());
+	mysqli_query($link, 'DROP TABLE IF EXISTS '.$tableName) or die(mysql_error());
 	
 }
 $qry="CREATE TABLE ".$tableName." (id int AUTO_INCREMENT, ".$fieldsInsert." PRIMARY KEY(id))";

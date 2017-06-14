@@ -7,7 +7,7 @@ if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 mysqli_query($link, "DELETE FROM CronTable where timer< DATE_SUB(NOW(), INTERVAL 1 DAY)");
-$sql3 = mysqli_query($link, "SELECT * FROM CronMail");
+$sql3 = mysqli_query($link, "SELECT * FROM CronTable");
 if($sql3)
 {if(mysqli_num_rows($sql3)>0)
 {

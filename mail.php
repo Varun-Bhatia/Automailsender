@@ -26,8 +26,8 @@ $mail->Port = 587;
 $mail->isHTML(true);
 $subj=$_POST['subject'];
 $TempID=$_POST['ID'];
-mysqli_query($link, "INSERT into CronTable(campname,Tempid,smtp,timer,subject) VALUES ('$campname','$TempID','$SMTPhost',NOW(),$subj)");
-
+mysqli_query($link, "INSERT into CronTable(campname,Tempid,smtp,timer,subject) VALUES ('$campname','$TempID','$SMTPhost',NOW(),'$subj')");
+$sentcount=0;
 //Provide username and password     
 mysqli_query($link, "DELETE FROM FileNew");
 $result1 = mysqli_query($link, "SELECT * FROM Senders");
@@ -96,8 +96,6 @@ $loop_count = floor($receiver_count/$sender_count);
         $total = $receiver_count - $other;
      
 
-		$last_email =	$sender[$sender_count -1]['email'] ;
-        $last_pass = 	$sender[$sender_count -1]['password'];
         //~ print_r($last_email);
         //~ print_r($last_pass);
         //~ //die;
@@ -123,7 +121,7 @@ $loop_count = floor($receiver_count/$sender_count);
 			$password=$sender[$i]['password'];
 			
 			$email=$sender[$i]['email'];   
-			$mail->Username = $name;                 
+			$mail->Username = $email;                 
 			$mail->Password = $password; 
 			$mail->From = $email;
 			$mail->FromName = $name;
@@ -139,18 +137,22 @@ $loop_count = floor($receiver_count/$sender_count);
 			
 			
 			while(strpos($msg,"}")!==FALSE)
-			{   $begs=strpos($sub,"{");
+			{   
+			while(strpos($sub,"}")!==FALSE)
+			{  $begs=strpos($sub,"{");
 				$ends=strpos($sub,"}");
 			
 				$repls=substr($sub,($begs+1), ($ends-$begs-1));
 				
 				++$ends;
 				$replls=substr($sub,($begs), ($ends-$begs));
-				
+				if(strcmp($repls,"Sender")==0)
+				{$sub=str_replace($replls,$name,$sub);}
+			    else{
 				@$finds=$rowf[$repls];
 				
                 $sub=str_replace($replls,$finds,$sub);
-		        
+			}}
 				$beg=strpos($msg,"{");
 				$end=strpos($msg,"}");
 			
@@ -158,29 +160,30 @@ $loop_count = floor($receiver_count/$sender_count);
 				
 				++$end;
 				$repll=substr($msg,($beg), ($end-$beg));
-				
+				if(strcmp($repl,"Sender")==0)
+				{$msg=str_replace($repll,$name,$msg);}
+				else{
 				$find=$rowf[$repl];
 				
                 $msg=str_replace($repll,$find,$msg);
                  			
-			}
+	}}
 			$id =$receiver[$count]['id']; 
 			
 			
-			
-			$mail->Body = $msg;
 			$mail->Subject = $sub;
-			
+			$mail->Body = $msg;
 			$mail->AddAddress($to);
      		$res=$mail->send();
      		$mail->ClearAddresses(); 
-			//~ echo "Sending email from '".$name."' to '".$to."'";
-			echo "</br>";
 			$date = date('Y-m-d H:i:s', time());
 			//echo $date;
+			echo "</br>";
+			print_r($res);
 			if($res=="true"){  
 				//header('location:index.php');
 				// echo "Message has been sent successfully";
+                ++$sentcount;
 				mysqli_query($link, "UPDATE FileNew SET status='sent' WHERE id={$id}");
 				mysqli_query($link, "UPDATE FileNew SET sendermail='{$name}' WHERE id={$id}");
 				mysqli_query($link, "UPDATE FileNew SET record='{$date}' WHERE id={$id}");
@@ -205,111 +208,14 @@ $mail->ClearAllRecipients();
 
 	
 }
- echo "count is =".$count;
-  if ($count == $receiver_count -1 || $count == $receiver_count -2){
-	  echo "hello"."</br>";
-	    
-	  echo "now count is".$count."</br>";
-	  $to =$receiver[$count]['email'];
-	   if (isset ($to)){
-							for($k=0;$k<$total;$k++){
-								$mail->Username = $last_email;                 
-								$mail->Password = $last_pass; 
-								$mail->From = $email;
-								$mail->FromName = 'mail';
-								$status= $receiver[$count]['status'];
-							
-							if($status==""){
-								$to =$receiver[$count]['email'];
-								
-								$id =$receiver[$count]['id']; 
-								print_r($sub);
-								print_r($to);
-								
-								
-								
-								$mail->Subject = $sub;
-								$mail->Body = $msg;
-								$mail->AddAddress($to);
-								$res=$mail->send();
-							    $mail->ClearAddresses(); 
-								echo "Sending email from '".$name."' to '".$to."'";
-								echo "</br>";
-								$date = date('Y-m-d H:i:s', time());
-								//~ //echo $date;
-								if($res=="true"){  
-									//header('location:index.php');
-									// echo "Message has been sent successfully";
-									mysqli_query($link, "UPDATE FileNew SET status='sent' WHERE id={$id}");
-									mysqli_query($link, "UPDATE FileNew SET sendermail='{$name}' WHERE id={$id}");
-									mysqli_query($link, "UPDATE FileNew SET 	record='{$date}' WHERE id={$id}");
-								   mysqli_query($link, "UPDATE FileNew SET 	senderpass='{$password}' WHERE id={$id}");
-								   echo $to;
-								   $testsql="UPDATE FileRecord SET status='sent' WHERE email=$to";
-								   echo "</br>";
-								   echo $testsql;
-								   
-								} 
-								else{  
-									echo "Mailer Error: " . $mail->ErrorInfo;
-								}
-//~ 
-								//~ //}
-								
-							   
-							echo "count value is ".$count."</br>";
-								if($count == $receiver_count)
-								{
-									 $PHPMailer->smtpClose();
-									}
-								unset($receiver[$count]);
-								$count++;
-								 
-								
-								
-								
-						}
-												
-							
-							
-				
-			
-			}
-		   
-		    }
-	    	
-	    
-	    
-	  }
-	  $resultch = mysqli_query($link, "SELECT * FROM FileNew where campname="."'".$campname."'");
-	  $jj=0;
-	  $receiver2=array();
-		while($row6 = mysqli_fetch_array($resultch))
-{
-	$receiver2[$jj]['id'] = $row6['id'];
-	$receiver2[$jj]['email'] = $row6['email'];
-	$receiver2[$jj]['status'] = $row6['status'];
-	$receiver2[$jj]['record'] = $row6['record'];
-	$receiver2[$jj]['sendermail'] = $row6['sendermail'];
-	$jj++;
-}
-$receiver_count2 = count($receiver2);
-$status2= $receiver2[$receiver_count2-1]['status'];
-	  if($status2=="")
-	  {$ch++;
-		
-	  }
-	  else
-	  {
-		  $ch=7;
-	  }
 
 
 
-echo "</br>";
 
 
-	echo "<strong>Mail send attempted</strong>";
+	echo "<strong>Mail send attempted for=</strong>".$count;
+	echo "</br>";
+	echo "Mail sent successfully=".$sentcount;
 }
 else
 {

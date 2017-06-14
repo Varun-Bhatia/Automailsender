@@ -13,6 +13,7 @@ $campname = $_GET['name'];
 //deleting the row from table
 $result2= mysqli_query($link, "DELETE FROM FileRecord WHERE campname="."'".$campname."'");
 mysqli_query($link, "DELETE FROM CampaignTrack WHERE name="."'".$campname."'");
+mysqli_query($link, "DROP TABLE ".$campname);
 
 
 if(mysqli_query($result2)){

@@ -12,6 +12,8 @@ if(isset($_POST["submit"]))
  $file = $_FILES['file']['tmp_name'];
  $text=file_get_contents($file);
  $text= nl2br($text);
+ print_r($text);
+ $text=str_replace("'","\'",$text);
  $sql = mysqli_query($link,"INSERT INTO Email (emailbody) VALUES ('$text')");
  
  if($sql){
