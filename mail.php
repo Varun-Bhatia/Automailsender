@@ -8,27 +8,15 @@ $link = connfn();
 if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
-$mail = new PHPMailer;
 
-//Enable SMTP debugging. 
-//~ $mail->SMTPDebug =2;                               
-//Set PHPMailer to use SMTP.
-$mail->isSMTP();  
-$mail->SMTPKeepAlive = true;
-//Set SMTP host name
 $SMTPhost=$_POST['name'];
 $campname=$_POST['campname'];                         
-$mail->Host = $SMTPhost;
-//Set this to true if SMTP host requires authentication to send email
-$mail->SMTPAuth = true;                          
-//Set TCP port to connect to 
-$mail->Port = 587;      
-$mail->isHTML(true);
+
+
 $subj=$_POST['subject'];
 $TempID=$_POST['ID'];
 mysqli_query($link, "INSERT into CronTable(campname,Tempid,smtp,timer,subject) VALUES ('$campname','$TempID','$SMTPhost',NOW(),'$subj')");
-$sentcount=0;
-//Provide username and password     
+$sentcount=0;    
 mysqli_query($link, "DELETE FROM FileNew");
 $result1 = mysqli_query($link, "SELECT * FROM Senders");
  $sql7= mysqli_query($link, "SELECT Emailid FROM ".$campname);
@@ -57,7 +45,6 @@ $emailformat=$temprow['emailbody'];
 		
 
 $result = mysqli_query($link, "SELECT * FROM FileNew");
-//~ print_r($result); die;
 
 $sender = $receiver = array();
 $i = 0;
@@ -81,24 +68,17 @@ while($row2 = mysqli_fetch_array($result))
 	$j++;
 }
 
-//~ print_r($sender);
-//print_r($receiver);
-//~ die;
 
 $sender_count = count($sender);
 $receiver_count = count($receiver);
 $loop_count = floor($receiver_count/$sender_count);
 
 
-//~ print_r($loop_count); 
+
 
         $other = $sender_count * $loop_count;
         $total = $receiver_count - $other;
      
-
-        //~ print_r($last_email);
-        //~ print_r($last_pass);
-        //~ //die;
 
      
      $other_Count=0;
@@ -108,19 +88,21 @@ $loop_count = floor($receiver_count/$sender_count);
 		$count= 0;
 	$i=0;
 	for($j=0;$j<$receiver_count;$j++){
-		//~ if($j == 0 && $i==1){
-			//~ print_r($receiver); die;
-	              		
-		//~ }
+
 		 if($i==$sender_count)
 		 {
 			 $i=0;
-		 }
-		    
+		 }  $mail = new PHPMailer;
+		    $mail->isSMTP(); 
+			$mail->Host = $SMTPhost;
+			$mail->SMTPAuth = true;
+			$mail->Port = 587;      
+            $mail->isHTML(true);
 			$name =$sender[$i]['name'];
 			$password=$sender[$i]['password'];
 			
-			$email=$sender[$i]['email'];   
+			$email=$sender[$i]['email'];
+            print_r($email);			
 			$mail->Username = $email;                 
 			$mail->Password = $password; 
 			$mail->From = $email;
@@ -177,18 +159,15 @@ $loop_count = floor($receiver_count/$sender_count);
      		$res=$mail->send();
      		$mail->ClearAddresses(); 
 			$date = date('Y-m-d H:i:s', time());
-			//echo $date;
 			echo "</br>";
 			print_r($res);
 			if($res=="true"){  
-				//header('location:index.php');
-				// echo "Message has been sent successfully";
                 ++$sentcount;
 				mysqli_query($link, "UPDATE FileNew SET status='sent' WHERE id={$id}");
 				mysqli_query($link, "UPDATE FileNew SET sendermail='{$name}' WHERE id={$id}");
 				mysqli_query($link, "UPDATE FileNew SET record='{$date}' WHERE id={$id}");
+				mysqli_query($link, "UPDATE FileRecord SET sendermail="."'".$name."'"."WHERE email="."'".$to."'"."AND status IS NULL");
 				mysqli_query($link, "UPDATE FileRecord SET status='sent' WHERE email="."'".$to."'");
-				mysqli_query($link, "UPDATE FileRecord SET sendermail="."'".$name."'"."WHERE email="."'".$to."'");
 				mysqli_query($link, "UPDATE FileRecord SET record="."'".$date."'"."WHERE email="."'".$to."'");
 				
 			} 

@@ -33,6 +33,7 @@ li a:hover {
 <body>
 <ul>
   <li><a class="active" href="index.php">Add emails</a></li>
+  <li><a class="active" href="Sender.php">Add emails(csv)</a></li>
   <li><a href="display.php">Manage emails</a></li>
   <li><a href="File.php">Upload files</a></li>
   <li><a href="demo.php">Excel Records</a></li>
@@ -108,7 +109,8 @@ while ($row=mysqli_fetch_array($result)) {
 
 
 if(isset($_POST['submt']))
-{   mysqli_query($link,"INSERT INTO Senders(name,email,password) SELECT name,email,password FROM Users");
+{   mysqli_query($link,"DELETE FROM Senders");
+    mysqli_query($link,"INSERT INTO Senders(name,email,password) SELECT name,email,password FROM Users");
     $chkbox = $_POST['checkbox'];
 	$sql= "DELETE FROM Senders WHERE email not in ";
 	$sql.= "('".implode("','",array_values($_POST['checkbox']))."')";

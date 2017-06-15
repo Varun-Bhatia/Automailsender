@@ -35,6 +35,7 @@ li a:hover {
 <body>
 <ul>
   <li><a class="active" href="index.php">Add emails</a></li>
+  <li><a class="active" href="Sender.php">Add emails(csv)</a></li>
   <li><a href="display.php">Manage emails</a></li>
   <li><a href="File.php">Upload files</a></li>
   <li><a href="demo.php">Excel Records</a></li>
@@ -60,6 +61,7 @@ li a:hover {
 <tr>
 <td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;">Select .txt file</td>
 <td width="50%" style="border-bottom:1px solid #eee; padding:5px;"><input type="file" name="file" id="file" required="required"/></td>
+<td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;"><input type="text" name="name" placeholder="Enter Template Name" required="required" class="input-txt" /></td>
 </tr>
 <tr>
 <td></td>

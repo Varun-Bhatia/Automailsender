@@ -55,17 +55,17 @@ li a:hover {
 <br>
 <br>
 <center>
-<h2><strong>Make sure emails in .csv file are under the header Emailid (case sensitive)</strong></h2>
+<h2><strong>Make sure .csv file has 3 headers:- name,email and password in this order</strong></h2>
 </center>
 <table width="600" style="margin:100px auto; background:#f8f8f8; border:1px solid #eee; padding:20px 0 25px 0;">
-<form action="Fileconn.php" method="post" enctype="multipart/form-data">
+<form action="Senderconn.php" method="post" enctype="multipart/form-data">
 <tr><td colspan="2" style="font:bold 21px arial; text-align:center; border-bottom:1px solid #eee; padding:5px 0 10px 0;">Browse and Upload Your File</td></tr>
 <tr>
-<td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;">Select file (Please save as your excel file in .csv format.)</td>
+<td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;">Select .csv file</td>
 <td width="50%" style="border-bottom:1px solid #eee; padding:5px;"><input type="file" name="file" id="file" required="required"/></td>
 </tr>
 <tr>
-<td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;"><input type="text" name="bname" placeholder="Enter Campaign Name" required="required" class="input-txt" /></td>
+<td width="50%" style="font:bold 14px tahoma, arial, sans-serif; text-align:right; border-bottom:1px solid #eee; padding:5px 10px 5px 0px; border-right:1px solid #eee;"></td>
 <td width="50%" style=" padding:5px;"><input type="submit" name="submit" onclick="myFunction()"/>
 <script>
 function myFunction() {

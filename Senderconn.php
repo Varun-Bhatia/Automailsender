@@ -9,17 +9,18 @@ die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 if(isset($_POST["submit"]))
 {
- $name=$_POST["name"];	
  $file = $_FILES['file']['tmp_name'];
- $text=file_get_contents($file);
- $text= nl2br($text);
- print_r($text);
- $text=str_replace("'","\'",$text);
- $text=str_replace('"','\"',$text);
- $sql = mysqli_query($link,"INSERT INTO Template (name,emailbody) VALUES ('$name','$text')");
- 
+ $handle = fopen($file, "r");
+ $filesop= fgetcsv($handle, 1000, ",");
+ while(($filesop = fgetcsv($handle, 1000, ",")) !== false)
+ {
+ $name = $filesop[0];
+ $email = $filesop[1];
+ $password = $filesop[2];
+ $sql = mysqli_query($link,"INSERT INTO Users (name,email,password) VALUES ('$name','$email','$password')");
+ }
  if($sql){
-  header('location:index.php');
+  header('location:display.php');
  }else{
  echo "Sorry! There is some problem.";
  }
@@ -28,7 +29,6 @@ mysqli_close($link);
 }
 else
 {
-	header("Location:AdminLogin.php");
+	header("Location:deom3.php");
 }
 ?>
- 
