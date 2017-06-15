@@ -16,7 +16,7 @@ if(isset($_POST["submit"]))
  print_r($text);
  $text=str_replace("'","\'",$text);
  $text=str_replace('"','\"',$text);
- $sql = mysqli_query($link,"INSERT INTO Template (name,emailbody) VALUES ('$name','$text')");
+ $sql = mysqli_query($link,"INSERT INTO Email (emailbody) VALUES ('$text')");
  
  if($sql){
   header('location:index.php');
