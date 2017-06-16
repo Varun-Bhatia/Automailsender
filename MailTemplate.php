@@ -35,7 +35,6 @@ li a:hover {
 <body>
 <ul>
   <li><a class="active" href="index.php">Add emails</a></li>
-  <li><a class="active" href="Sender.php">Add emails(csv)</a></li>
   <li><a href="display.php">Manage emails</a></li>
   <li><a href="File.php">Upload files</a></li>
   <li><a href="demo.php">Excel Records</a></li>
